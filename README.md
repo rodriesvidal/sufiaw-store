@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sufiaw Store
 
-## Getting Started
+Tienda online y panel de administración para **Sufiaw Store**, construida con Next.js 16, React 19, TypeScript, Tailwind CSS y shadcn/ui.
 
-First, run the development server:
+## Estado actual
+
+- Escaparate editorial responsive
+- Catálogo y fichas de producto
+- Bolsa de selección con contacto a Instagram
+- Panel CRUD de productos en `/admin`
+- Asignación local de administradores
+- Imágenes y productos de muestra claramente identificados
+- SEO base, sitemap, robots y metadatos sociales
+- Auditoría WCAG sin infracciones automáticas detectadas
+
+El panel usa `localStorage` durante esta primera etapa. Esto permite validar el flujo sin exponer credenciales ni contratar servicios antes de aprobar el catálogo. Los cambios sólo se ven en el navegador que los creó.
+
+## Desarrollo
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre `http://localhost:3000`. El panel está disponible en `http://localhost:3000/admin`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Validación
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+## Paso a producción del panel
 
-To learn more about Next.js, take a look at the following resources:
+La interfaz ya separa las piezas que luego se conectarán a servicios persistentes:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clerk para inicio de sesión y lista segura de administradores.
+2. Base de datos administrada para productos, inventario y pedidos.
+3. Vercel Blob para fotografías de producto.
+4. Mercado Pago para checkout, webhooks y estado de pago.
+5. Dominio propio una vez comprado.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Las variables previstas están documentadas en `.env.example`; no se deben guardar secretos en Git.
 
-## Deploy on Vercel
+## Recursos visuales
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Las imágenes iniciales son mockups generados para definir la dirección visual y están marcadas como “Muestra visual” en la tienda. Deben reemplazarse por fotografías reales desde el panel antes de habilitar pagos.
