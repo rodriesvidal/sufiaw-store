@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, MessageCircle, PackageCheck, Plus, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, CreditCard, ExternalLink, MessageCircle, PackageCheck, PackageX, Plus, ShieldCheck, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { CartSheet } from "@/components/cart-sheet";
 import { Brand } from "@/components/brand";
@@ -28,6 +28,8 @@ export function ProductDetail({ slug }: { slug: string }) {
     );
   }
 
+  const isSoldOut = product.status === "Agotado";
+
   return (
     <main className="min-h-screen">
       <header className="border-b">
@@ -38,14 +40,19 @@ export function ProductDetail({ slug }: { slug: string }) {
         </div>
       </header>
       <div className="site-container grid gap-10 py-6 lg:grid-cols-[1.15fr_.85fr] lg:gap-16 lg:py-10">
-        <div className="relative aspect-[4/5] overflow-hidden bg-muted lg:sticky lg:top-10">
-          <Image src={product.image} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover" priority />
-          {product.demo && <Badge className="absolute left-5 top-5 rounded-none" variant="secondary">Imagen referencial</Badge>}
+        <div className="lg:sticky lg:top-10">
+          <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+            <Image src={product.image} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover" priority />
+            {product.demo && <Badge className="absolute left-5 top-5 rounded-none" variant="secondary">Imagen referencial</Badge>}
+          </div>
         </div>
         <div className="flex flex-col justify-center py-6 lg:py-16">
           <p className="eyebrow text-muted-foreground">{product.category} / Sufiaw</p>
+          <Badge className="mt-5 w-fit rounded-none" variant={isSoldOut ? "secondary" : "default"}>
+            {isSoldOut ? "Agotado · consulta reposición" : product.stock > 0 ? `${product.stock} disponibles` : "Disponible a pedido"}
+          </Badge>
           <h1 className="mt-5 text-balance text-5xl font-semibold tracking-[-0.055em] md:text-7xl">{product.name}</h1>
-          <p className="mt-6 font-mono text-base">{formatCLP(product.price)}</p>
+          <p className="mt-6 font-mono text-base">{isSoldOut ? "Sin stock" : formatCLP(product.price)}</p>
           <p className="mt-8 max-w-lg text-base leading-7 text-muted-foreground">{product.description}</p>
           {product.specs && (
             <div className="mt-8 grid gap-2 border-y py-6 sm:grid-cols-2">
@@ -58,17 +65,27 @@ export function ProductDetail({ slug }: { slug: string }) {
             </div>
           )}
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            {product.externalUrl ? (
-              <Button asChild size="lg" className="h-13 bg-[#c8ff37] text-black hover:bg-[#b2e92b]">
-                <Link href={product.externalUrl} target="_blank" rel="noopener noreferrer">Ver en Mercado Libre <ExternalLink className="size-4" /></Link>
+            {isSoldOut ? (
+              <Button size="lg" className="h-13" disabled>
+                <PackageX className="size-4" /> Producto agotado
               </Button>
             ) : (
-              <Button size="lg" className="h-13" onClick={() => { addToCart(product.id); toast.success("Agregado a tu cotización"); }}>
-                <Plus className="size-4" /> Agregar a cotización
+              <Button size="lg" className="h-13 bg-[#c8ff37] text-black hover:bg-[#b2e92b]" onClick={() => { addToCart(product.id); toast.success("Agregado a tu compra"); }}>
+                <Plus className="size-4" /> Agregar a la compra
+              </Button>
+            )}
+            {product.mercadoPagoUrl && !isSoldOut && (
+              <Button asChild size="lg" variant="outline" className="h-13">
+                <Link href={product.mercadoPagoUrl} target="_blank" rel="noopener noreferrer"><CreditCard className="size-4" /> Pagar con Mercado Pago</Link>
+              </Button>
+            )}
+            {product.externalUrl && (
+              <Button asChild size="lg" variant="outline" className="h-13">
+                <Link href={product.externalUrl} target="_blank" rel="noopener noreferrer">Ver en Mercado Libre <ExternalLink className="size-4" /></Link>
               </Button>
             )}
             <Button asChild size="lg" variant="outline" className="h-13">
-              <Link href={`${contactLinks.whatsapp}?text=${encodeURIComponent(`Hola Sufiaw, quiero consultar por ${product.name}.`)}`} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" /> Consultar</Link>
+              <Link href={`${contactLinks.whatsapp}?text=${encodeURIComponent(`Hola Sufiaw, quiero consultar por ${product.name}${isSoldOut ? " y su reposición" : ""}.`)}`} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4" /> Consultar</Link>
             </Button>
           </div>
           <Separator className="my-10" />

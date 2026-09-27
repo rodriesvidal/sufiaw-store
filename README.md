@@ -9,13 +9,28 @@ Tienda de computadores, accesorios y servicios tecnológicos con panel de admini
 - Escaparate editorial responsive
 - Catálogo y fichas de producto
 - Cotización directa por WhatsApp y enlaces a Mercado Libre
+- Checkout visual preparado para Webpay Plus y Mercado Pago
 - Panel CRUD de productos en `/admin`
+- Estados publicado, agotado visible y borrador privado
 - Asignación local de administradores
 - Imágenes y productos de muestra claramente identificados
 - SEO base, sitemap, robots y metadatos sociales
 - Auditoría WCAG sin infracciones automáticas detectadas
 
 El panel usa `localStorage` durante esta primera etapa. Esto permite validar el flujo sin exponer credenciales ni contratar servicios antes de aprobar el catálogo. Los cambios sólo se ven en el navegador que los creó.
+
+## Preparación de pagos
+
+La ruta `/checkout` ya presenta Webpay Plus y Mercado Pago sin simular cobros. El panel permite guardar un enlace de Mercado Pago por producto; cuando exista, se habilitará para una compra directa de una unidad.
+
+Para activar cobros completos se implementarán estos flujos sobre un catálogo persistente:
+
+1. Webpay: crear la transacción en servidor, redirigir con `token_ws`, confirmar el retorno y registrar el resultado.
+2. Mercado Pago: crear una preferencia de Checkout Pro, redirigir al `init_point` y actualizar la orden mediante webhook validado.
+3. Verificar precio y stock desde la base de datos antes de crear cualquier pago.
+4. Descontar inventario sólo después de confirmar el pago.
+
+Las credenciales previstas están en `.env.example` y nunca deben exponerse al navegador.
 
 ## Desarrollo
 

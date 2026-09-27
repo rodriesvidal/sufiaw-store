@@ -14,6 +14,7 @@ import {
   Check,
   CircleDollarSign,
   Cloud,
+  CreditCard,
   ExternalLink,
   Eye,
   ImagePlus,
@@ -160,6 +161,7 @@ const emptyDraft = {
   description: "",
   image: "",
   externalUrl: "",
+  mercadoPagoUrl: "",
   specs: "",
   featured: true,
 };
@@ -188,6 +190,7 @@ export function AdminDashboard() {
   const published = products.filter(
     (item) => item.status === "Publicado",
   ).length;
+  const soldOut = products.filter((item) => item.status === "Agotado").length;
   const totalStock = products.reduce((sum, item) => sum + item.stock, 0);
   const pricedValue = products.reduce(
     (sum, item) => sum + (item.price ?? 0) * item.stock,
@@ -220,6 +223,7 @@ export function AdminDashboard() {
       description: product.description,
       image: product.image,
       externalUrl: product.externalUrl ?? "",
+      mercadoPagoUrl: product.mercadoPagoUrl ?? "",
       specs: product.specs?.join("\n") ?? "",
       featured: product.featured ?? false,
     });
@@ -262,6 +266,7 @@ export function AdminDashboard() {
       description: draft.description.trim() || "Nuevo producto o servicio de Sufiaw Store.",
       featured: draft.featured,
       externalUrl: draft.externalUrl.trim() || undefined,
+      mercadoPagoUrl: draft.mercadoPagoUrl.trim() || undefined,
       specs: draft.specs.split("\n").map((item) => item.trim()).filter(Boolean),
     };
     setProducts(
@@ -273,19 +278,18 @@ export function AdminDashboard() {
     toast.success(editingId ? "Producto actualizado" : "Producto creado");
   }
 
-  function togglePublished(product: Product) {
-    const status: ProductStatus =
-      product.status === "Publicado" ? "Borrador" : "Publicado";
+  function updateStatus(product: Product, status: ProductStatus) {
     setProducts(
       products.map((item) =>
         item.id === product.id ? { ...item, status } : item,
       ),
     );
-    toast.success(
-      status === "Publicado"
-        ? "Producto publicado"
-        : "Producto movido a borrador",
-    );
+    const messages: Record<ProductStatus, string> = {
+      Publicado: "Producto publicado",
+      Agotado: "Producto marcado como agotado y visible en la tienda",
+      Borrador: "Producto ocultado del catálogo público",
+    };
+    toast.success(messages[status]);
   }
 
   function addAdmin(event: FormEvent<HTMLFormElement>) {
@@ -394,7 +398,7 @@ export function AdminDashboard() {
                     Package,
                     "Productos",
                     products.length.toString(),
-                    `${published} publicados`,
+                    `${published} disponibles · ${soldOut} agotados`,
                   ],
                   [Tags, "Unidades", totalStock.toString(), "Stock total"],
                   [
@@ -611,14 +615,21 @@ export function AdminDashboard() {
                                 >
                                   <Pencil className="size-4" /> Editar
                                 </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => togglePublished(product)}
-                                >
-                                  <Eye className="size-4" />{" "}
-                                  {product.status === "Publicado"
-                                    ? "Ocultar"
-                                    : "Publicar"}
-                                </DropdownMenuItem>
+                                {product.status !== "Publicado" && (
+                                  <DropdownMenuItem onClick={() => updateStatus(product, "Publicado")}>
+                                    <Eye className="size-4" /> Publicar como disponible
+                                  </DropdownMenuItem>
+                                )}
+                                {product.status !== "Agotado" && (
+                                  <DropdownMenuItem onClick={() => updateStatus(product, "Agotado")}>
+                                    <Package className="size-4" /> Marcar como agotado
+                                  </DropdownMenuItem>
+                                )}
+                                {product.status !== "Borrador" && (
+                                  <DropdownMenuItem onClick={() => updateStatus(product, "Borrador")}>
+                                    <Eye className="size-4" /> Ocultar del catálogo
+                                  </DropdownMenuItem>
+                                )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   variant="destructive"
@@ -757,8 +768,14 @@ export function AdminDashboard() {
                   [
                     CircleDollarSign,
                     "Mercado Pago",
-                    "Checkout o enlaces de pago",
-                    "Próximamente",
+                    "Checkout Pro o enlaces por producto",
+                    "UI preparada",
+                  ],
+                  [
+                    CreditCard,
+                    "Webpay Plus",
+                    "Creación y confirmación con Transbank",
+                    "UI preparada",
                   ],
                   [
                     ExternalLink,
@@ -833,6 +850,8 @@ export function AdminDashboard() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Computadores">Computadores</SelectItem>
+                    <SelectItem value="Notebooks">Notebooks</SelectItem>
+                    <SelectItem value="Monitores">Monitores</SelectItem>
                     <SelectItem value="Accesorios">Accesorios</SelectItem>
                     <SelectItem value="Configuración">Configuración</SelectItem>
                     <SelectItem value="Software">Software</SelectItem>
@@ -857,6 +876,9 @@ export function AdminDashboard() {
                     <SelectItem value="Agotado">Agotado</SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-xs leading-5 text-muted-foreground">
+                  “Agotado” permanece visible; “Borrador” se oculta de la tienda.
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="price">Precio CLP</Label>
@@ -891,7 +913,7 @@ export function AdminDashboard() {
                   onChange={(event) =>
                     setDraft({ ...draft, description: event.target.value })
                   }
-                  placeholder="Describe material, calce y detalles…"
+                  placeholder="Describe el equipo, compatibilidad, condición y uso recomendado…"
                   rows={4}
                 />
               </div>
@@ -908,7 +930,7 @@ export function AdminDashboard() {
                 />
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="externalUrl">Enlace de compra externo</Label>
+                <Label htmlFor="externalUrl">Enlace de Mercado Libre</Label>
                 <Input
                   id="externalUrl"
                   type="url"
@@ -918,6 +940,21 @@ export function AdminDashboard() {
                   }
                   placeholder="https://www.mercadolibre.cl/…"
                 />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="mercadoPagoUrl">Enlace de Mercado Pago</Label>
+                <Input
+                  id="mercadoPagoUrl"
+                  type="url"
+                  value={draft.mercadoPagoUrl}
+                  onChange={(event) =>
+                    setDraft({ ...draft, mercadoPagoUrl: event.target.value })
+                  }
+                  placeholder="https://link.mercadopago.cl/…"
+                />
+                <p className="text-xs leading-5 text-muted-foreground">
+                  Si existe, se habilitará como pago directo para una unidad de este producto.
+                </p>
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="image">Imagen</Label>

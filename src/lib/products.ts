@@ -13,6 +13,7 @@ export type Product = {
   featured?: boolean;
   demo?: boolean;
   externalUrl?: string;
+  mercadoPagoUrl?: string;
   specs?: string[];
 };
 
@@ -93,6 +94,76 @@ export const initialProducts: Product[] = [
     featured: true,
     demo: true,
     specs: ["Documentos y material de estudio", "Impresión monocromática", "Coordinación por WhatsApp"],
+  },
+  {
+    id: "pc-gaming-ryzen5-rtx4060",
+    slug: "pc-gaming-ryzen-5-rtx-4060",
+    name: "PC Gaming Ryzen 5 + RTX 4060",
+    category: "Computadores",
+    price: null,
+    stock: 0,
+    status: "Agotado",
+    image: "/images/pc-gaming-reference.png",
+    description:
+      "Configuración gaming conservada en catálogo para consultar reposición o solicitar una alternativa equivalente.",
+    demo: true,
+    specs: ["AMD Ryzen 5", "NVIDIA GeForce RTX 4060", "SSD M.2", "Configuración sujeta a disponibilidad"],
+  },
+  {
+    id: "notebook-trabajo-estudio",
+    slug: "notebook-trabajo-estudio-15",
+    name: "Notebook 15” Trabajo & Estudio",
+    category: "Notebooks",
+    price: null,
+    stock: 0,
+    status: "Agotado",
+    image: "/images/notebook-reference.png",
+    description:
+      "Notebook versátil para productividad, clases y uso diario. Consulta por configuraciones disponibles o reposición.",
+    demo: true,
+    specs: ["Pantalla 15 pulgadas", "Almacenamiento SSD", "Diseño portátil", "Configuración a confirmar"],
+  },
+  {
+    id: "monitor-ips-24",
+    slug: "monitor-ips-24-full-hd",
+    name: "Monitor 24” IPS Full HD",
+    category: "Monitores",
+    price: null,
+    stock: 0,
+    status: "Agotado",
+    image: "/images/monitor-reference.png",
+    description:
+      "Monitor de escritorio para trabajo, estudio y gaming casual. Ficha visible para facilitar consultas de reposición.",
+    demo: true,
+    specs: ["Panel IPS", "Resolución Full HD", "Formato de 24 pulgadas", "Conectividad a confirmar"],
+  },
+  {
+    id: "combo-teclado-mouse",
+    slug: "combo-teclado-mecanico-mouse",
+    name: "Combo teclado mecánico + mouse",
+    category: "Accesorios",
+    price: null,
+    stock: 0,
+    status: "Agotado",
+    image: "/images/keyboard-mouse-reference.png",
+    description:
+      "Combo compacto para gaming y productividad. Consulta por modelos, distribución y conectividad disponibles.",
+    demo: true,
+    specs: ["Teclado mecánico compacto", "Mouse gaming", "Iluminación configurable", "Modelo a confirmar"],
+  },
+  {
+    id: "audifonos-gaming",
+    slug: "audifonos-gaming-microfono",
+    name: "Audífonos gaming con micrófono",
+    category: "Accesorios",
+    price: null,
+    stock: 0,
+    status: "Agotado",
+    image: "/images/headset-reference.png",
+    description:
+      "Audífonos over-ear para juego, llamadas y contenido multimedia. Consulta por alternativas y próxima reposición.",
+    demo: true,
+    specs: ["Formato over-ear", "Micrófono integrado", "Almohadillas acolchadas", "Conectividad a confirmar"],
   },
 ];
 

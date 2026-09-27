@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { CreditCard, MessageCircle, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useStore } from "@/components/store-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +26,11 @@ export function CartSheet() {
     (sum, line) => sum + (line.product.price ?? 0) * line.quantity,
     0,
   );
+  const canContinueToPayment =
+    lines.length > 0 &&
+    lines.every(
+      (line) => line.product.status === "Publicado" && line.product.price !== null,
+    );
   const requestText = lines.length
     ? `Hola Sufiaw, quiero consultar por:\n${lines.map((line) => `• ${line.product.name} × ${line.quantity}`).join("\n")}`
     : "Hola Sufiaw, quiero consultar por sus productos y servicios.";
@@ -45,9 +50,9 @@ export function CartSheet() {
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col p-0 sm:max-w-md">
         <SheetHeader className="border-b p-6 text-left">
-          <SheetTitle className="text-xl">Tu cotización</SheetTitle>
+          <SheetTitle className="text-xl">Tu compra</SheetTitle>
           <SheetDescription>
-            Selecciona equipos o servicios y consúltalos directamente con Sufiaw.
+            Revisa tus productos y elige pago online o atención directa.
           </SheetDescription>
         </SheetHeader>
         {lines.length === 0 ? (
@@ -98,14 +103,33 @@ export function CartSheet() {
               <span className="font-mono font-medium">{formatCLP(total)}</span>
             </div>
           )}
-          <Button asChild className="h-12 w-full" disabled={lines.length === 0}>
-            <Link href={whatsAppUrl} target="_blank" rel="noopener noreferrer">
+          {canContinueToPayment ? (
+            <Button asChild className="h-12 w-full bg-[#c8ff37] text-black hover:bg-[#b2e92b]">
+              <Link href="/checkout">
+                <CreditCard className="size-4" /> Continuar al pago
+              </Link>
+            </Button>
+          ) : (
+            <Button className="h-12 w-full" disabled>
+              <CreditCard className="size-4" /> Pago online no disponible
+            </Button>
+          )}
+          {lines.length > 0 ? (
+            <Button asChild variant="outline" className="mt-3 h-12 w-full">
+              <Link href={whatsAppUrl} target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="size-4" /> Consultar por WhatsApp
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="outline" className="mt-3 h-12 w-full" disabled>
               <MessageCircle className="size-4" /> Consultar por WhatsApp
-            </Link>
-          </Button>
+            </Button>
+          )}
           <Separator className="my-4" />
           <p className="text-center text-xs leading-relaxed text-muted-foreground">
-            Confirmamos stock, compatibilidad, despacho y forma de pago antes de cerrar la compra.
+            {canContinueToPayment
+              ? "Webpay y Mercado Pago quedarán habilitados aquí cuando se conecten sus credenciales."
+              : "Los servicios sin precio y productos agotados se coordinan directamente con Sufiaw."}
           </p>
         </div>
       </SheetContent>

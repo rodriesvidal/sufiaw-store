@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Plus } from "lucide-react";
+import { ArrowUpRight, PackageX, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useStore } from "@/components/store-provider";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { formatCLP, type Product } from "@/lib/products";
 
 export function ProductCard({ product, index }: { product: Product; index: number }) {
   const { addToCart } = useStore();
+  const isSoldOut = product.status === "Agotado";
   return (
     <article className="group">
       <Link href={`/productos/${product.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-muted">
@@ -19,11 +20,14 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+          className={`object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035] ${isSoldOut ? "grayscale-[35%]" : ""}`}
           priority={index < 2}
         />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
-          {product.demo && <Badge variant="secondary" className="rounded-none bg-background/90 backdrop-blur">Imagen referencial</Badge>}
+          <div className="flex flex-col items-start gap-2">
+            {product.demo && <Badge variant="secondary" className="rounded-none bg-background/90 backdrop-blur">Imagen referencial</Badge>}
+            {isSoldOut && <Badge className="rounded-none bg-[#111] text-white">Agotado</Badge>}
+          </div>
           <span className="ml-auto grid size-9 place-items-center bg-background/90 opacity-0 transition-opacity group-hover:opacity-100">
             <ArrowUpRight className="size-4" />
           </span>
@@ -33,19 +37,22 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
         <div>
           <p className="eyebrow text-muted-foreground">{product.category}</p>
           <h3 className="mt-2 text-base font-semibold tracking-tight">{product.name}</h3>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">{formatCLP(product.price)}</p>
+          <p className="mt-1 font-mono text-xs text-muted-foreground">
+            {isSoldOut ? "Consultar reposición" : formatCLP(product.price)}
+          </p>
         </div>
         <Button
           variant="outline"
           size="icon"
           className="shrink-0 rounded-full"
+          disabled={isSoldOut}
           onClick={() => {
             addToCart(product.id);
             toast.success("Agregado a tu cotización");
           }}
-          aria-label={`Agregar ${product.name}`}
+          aria-label={isSoldOut ? `${product.name} agotado` : `Agregar ${product.name}`}
         >
-          <Plus className="size-4" />
+          {isSoldOut ? <PackageX className="size-4" /> : <Plus className="size-4" />}
         </Button>
       </div>
     </article>

@@ -25,8 +25,8 @@ type StoreContextValue = {
 };
 
 const StoreContext = createContext<StoreContextValue | null>(null);
-const PRODUCT_KEY = "sufiaw-products-v2";
-const CART_KEY = "sufiaw-cart-v2";
+const PRODUCT_KEY = "sufiaw-products-v3";
+const CART_KEY = "sufiaw-cart-v3";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [products, setProductsState] = useState<Product[]>(initialProducts);
@@ -65,6 +65,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       addProduct: (product) => setProducts([product, ...products]),
       removeProduct: (id) => setProducts(products.filter((item) => item.id !== id)),
       addToCart: (productId) => {
+        const product = products.find((item) => item.id === productId);
+        if (!product || product.status !== "Publicado") return;
         const found = cart.find((line) => line.productId === productId);
         persistCart(
           found

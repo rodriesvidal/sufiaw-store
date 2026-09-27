@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import {
   ArrowDown,
   BadgeCheck,
@@ -25,7 +26,12 @@ import { contactLinks } from "@/lib/products";
 
 export function HomeStorefront() {
   const { products } = useStore();
-  const visibleProducts = products.filter((product) => product.status === "Publicado");
+  const [activeCategory, setActiveCategory] = useState("Todos");
+  const listedProducts = products.filter((product) => product.status !== "Borrador");
+  const categories = ["Todos", ...new Set(listedProducts.map((product) => product.category))];
+  const visibleProducts = listedProducts.filter(
+    (product) => activeCategory === "Todos" || product.category === activeCategory,
+  );
 
   return (
     <main>
@@ -98,8 +104,28 @@ export function HomeStorefront() {
             <h2 className="mt-4 text-4xl font-semibold tracking-[-0.05em] md:text-6xl">Equipos y soluciones</h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-muted-foreground">
-            Un equipo publicado y servicios que cotizamos a medida. Las imágenes referenciales serán reemplazables desde administración.
+            Explora equipos, periféricos y servicios. Los artículos agotados permanecen visibles para consultar reposición o alternativas.
           </p>
+        </div>
+        <div className="mb-10 flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar catálogo por categoría">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              aria-pressed={activeCategory === category}
+              onClick={() => setActiveCategory(category)}
+              className={`border px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                activeCategory === category
+                  ? "border-[#111] bg-[#111] text-white"
+                  : "bg-transparent hover:border-[#111]"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+          <span className="ml-auto text-xs text-muted-foreground">
+            {visibleProducts.length} {visibleProducts.length === 1 ? "artículo" : "artículos"}
+          </span>
         </div>
         <div className="grid gap-x-5 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
           {visibleProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}
