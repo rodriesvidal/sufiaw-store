@@ -1,5 +1,7 @@
 # Sufiaw Store
 
+Producción: [sufiaw-store.vercel.app](https://sufiaw-store.vercel.app)
+
 Tienda de computadores, accesorios y servicios tecnológicos con panel de administración para **Sufiaw Store**, construida con Next.js 16, React 19, TypeScript, Tailwind CSS y shadcn/ui.
 
 ## Estado actual
