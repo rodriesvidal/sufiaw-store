@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Camera, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { MessageCircle, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useStore } from "@/components/store-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +14,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { formatCLP } from "@/lib/products";
+import { contactLinks, formatCLP } from "@/lib/products";
 
 export function CartSheet() {
   const { cart, cartCount, products, setQuantity } = useStore();
@@ -26,6 +26,10 @@ export function CartSheet() {
     (sum, line) => sum + (line.product.price ?? 0) * line.quantity,
     0,
   );
+  const requestText = lines.length
+    ? `Hola Sufiaw, quiero consultar por:\n${lines.map((line) => `• ${line.product.name} × ${line.quantity}`).join("\n")}`
+    : "Hola Sufiaw, quiero consultar por sus productos y servicios.";
+  const whatsAppUrl = `${contactLinks.whatsapp}?text=${encodeURIComponent(requestText)}`;
 
   return (
     <Sheet>
@@ -41,9 +45,9 @@ export function CartSheet() {
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col p-0 sm:max-w-md">
         <SheetHeader className="border-b p-6 text-left">
-          <SheetTitle className="text-xl">Tu selección</SheetTitle>
+          <SheetTitle className="text-xl">Tu cotización</SheetTitle>
           <SheetDescription>
-            Guarda piezas y coordina la compra directamente con Sufiaw.
+            Selecciona equipos o servicios y consúltalos directamente con Sufiaw.
           </SheetDescription>
         </SheetHeader>
         {lines.length === 0 ? (
@@ -51,9 +55,9 @@ export function CartSheet() {
             <div className="mb-5 grid size-16 place-items-center rounded-full bg-muted">
               <ShoppingBag className="size-6" />
             </div>
-            <h3 className="font-semibold">Tu bolsa está vacía</h3>
+            <h3 className="font-semibold">Aún no agregas productos</h3>
             <p className="mt-2 max-w-xs text-sm text-muted-foreground">
-              Explora el catálogo y guarda las piezas que te interesan.
+              Explora equipos, accesorios y servicios tecnológicos.
             </p>
           </div>
         ) : (
@@ -95,13 +99,13 @@ export function CartSheet() {
             </div>
           )}
           <Button asChild className="h-12 w-full" disabled={lines.length === 0}>
-            <Link href="https://www.instagram.com/sufiaw_chile/" target="_blank">
-              <Camera className="size-4" /> Coordinar por Instagram
+            <Link href={whatsAppUrl} target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="size-4" /> Consultar por WhatsApp
             </Link>
           </Button>
           <Separator className="my-4" />
           <p className="text-center text-xs leading-relaxed text-muted-foreground">
-            Pago online en preparación. Por ahora confirmamos stock, despacho y medio de pago por mensaje.
+            Confirmamos stock, compatibilidad, despacho y forma de pago antes de cerrar la compra.
           </p>
         </div>
       </SheetContent>

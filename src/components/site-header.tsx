@@ -12,11 +12,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { contactLinks } from "@/lib/products";
 
 const links = [
-  { href: "/#coleccion", label: "Colección" },
-  { href: "/#historia", label: "La marca" },
-  { href: "https://www.instagram.com/sufiaw_chile/", label: "Instagram", external: true },
+  { href: "/#equipos", label: "Equipos" },
+  { href: "/#servicios", label: "Servicios" },
+  { href: contactLinks.mercadoLibre, label: "Mercado Libre", external: true },
 ];
 
 export function SiteHeader() {
@@ -36,7 +37,7 @@ export function SiteHeader() {
               </SheetHeader>
               <nav className="flex flex-col p-6">
                 {links.map((link, index) => (
-                  <Link key={link.href} href={link.href} target={link.external ? "_blank" : undefined} className="flex items-center justify-between border-b py-5 text-xl font-medium">
+                  <Link key={link.href} href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined} className="flex items-center justify-between border-b py-5 text-xl font-medium">
                     {link.label}<span className="font-mono text-xs text-muted-foreground">0{index + 1}</span>
                   </Link>
                 ))}
@@ -47,7 +48,7 @@ export function SiteHeader() {
         <Brand className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0" />
         <nav className="hidden items-center gap-8 lg:flex">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} target={link.external ? "_blank" : undefined} className="eyebrow transition-opacity hover:opacity-50">
+            <Link key={link.href} href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined} className="eyebrow transition-opacity hover:opacity-50">
               {link.label}
             </Link>
           ))}

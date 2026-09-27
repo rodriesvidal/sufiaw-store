@@ -23,7 +23,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
           priority={index < 2}
         />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between p-4">
-          {product.demo && <Badge variant="secondary" className="rounded-none bg-background/90 backdrop-blur">Muestra visual</Badge>}
+          {product.demo && <Badge variant="secondary" className="rounded-none bg-background/90 backdrop-blur">Imagen referencial</Badge>}
           <span className="ml-auto grid size-9 place-items-center bg-background/90 opacity-0 transition-opacity group-hover:opacity-100">
             <ArrowUpRight className="size-4" />
           </span>
@@ -41,7 +41,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
           className="shrink-0 rounded-full"
           onClick={() => {
             addToCart(product.id);
-            toast.success("Agregado a tu selección");
+            toast.success("Agregado a tu cotización");
           }}
           aria-label={`Agregar ${product.name}`}
         >

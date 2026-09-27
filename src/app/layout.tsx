@@ -6,14 +6,14 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://sufiaw-store.vercel.app"),
   title: {
-    default: "Sufiaw Store — Streetwear & accesorios",
+    default: "Sufiaw Store — Computadores y tecnología",
     template: "%s — Sufiaw Store",
   },
   description:
-    "Streetwear y accesorios seleccionados en Chile. Descubre las próximas piezas de Sufiaw Store.",
+    "Computadores, accesorios, licencias, juegos digitales, impresión láser y soporte tecnológico en Chile.",
   openGraph: {
     title: "Sufiaw Store",
-    description: "Piezas que hablan antes que tú.",
+    description: "Tecnología preparada para rendir.",
     locale: "es_CL",
     type: "website",
   },

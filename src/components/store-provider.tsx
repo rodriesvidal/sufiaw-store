@@ -25,8 +25,8 @@ type StoreContextValue = {
 };
 
 const StoreContext = createContext<StoreContextValue | null>(null);
-const PRODUCT_KEY = "sufiaw-products-v1";
-const CART_KEY = "sufiaw-cart-v1";
+const PRODUCT_KEY = "sufiaw-products-v2";
+const CART_KEY = "sufiaw-cart-v2";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [products, setProductsState] = useState<Product[]>(initialProducts);

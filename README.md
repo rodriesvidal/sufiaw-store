@@ -1,12 +1,12 @@
 # Sufiaw Store
 
-Tienda online y panel de administración para **Sufiaw Store**, construida con Next.js 16, React 19, TypeScript, Tailwind CSS y shadcn/ui.
+Tienda de computadores, accesorios y servicios tecnológicos con panel de administración para **Sufiaw Store**, construida con Next.js 16, React 19, TypeScript, Tailwind CSS y shadcn/ui.
 
 ## Estado actual
 
 - Escaparate editorial responsive
 - Catálogo y fichas de producto
-- Bolsa de selección con contacto a Instagram
+- Cotización directa por WhatsApp y enlaces a Mercado Libre
 - Panel CRUD de productos en `/admin`
 - Asignación local de administradores
 - Imágenes y productos de muestra claramente identificados
@@ -45,4 +45,4 @@ Las variables previstas están documentadas en `.env.example`; no se deben guard
 
 ## Recursos visuales
 
-Las imágenes iniciales son mockups generados para definir la dirección visual y están marcadas como “Muestra visual” en la tienda. Deben reemplazarse por fotografías reales desde el panel antes de habilitar pagos.
+Las imágenes iniciales son referencias generadas para definir la dirección visual y están marcadas como “Imagen referencial” en la tienda. Deben reemplazarse por fotografías reales desde el panel antes de habilitar pagos directos.

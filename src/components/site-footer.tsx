@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Brand } from "@/components/brand";
+import { contactLinks } from "@/lib/products";
 
 export function SiteFooter() {
   return (
@@ -10,27 +11,35 @@ export function SiteFooter() {
           <div>
             <Brand inverse />
             <p className="mt-6 max-w-md text-sm leading-6 text-white/55">
-              Streetwear y accesorios con carácter. Diseñado para una comunidad que no necesita explicarse.
+              Computadores, accesorios, software y servicios tecnológicos con atención directa en Chile.
             </p>
           </div>
           <div>
             <p className="eyebrow text-white/60">Explora</p>
             <div className="mt-5 flex flex-col gap-3 text-sm">
-              <Link href="/#coleccion">Colección</Link>
-              <Link href="/#historia">La marca</Link>
+              <Link href="/#equipos">Equipos</Link>
+              <Link href="/#servicios">Servicios</Link>
               <Link href="/admin">Administración</Link>
             </div>
           </div>
           <div>
             <p className="eyebrow text-white/60">Conecta</p>
-            <Link href="https://www.instagram.com/sufiaw_chile/" target="_blank" className="mt-5 inline-flex items-center gap-2 text-sm">
-              @sufiaw_chile <ArrowUpRight className="size-3.5" />
-            </Link>
+            <div className="mt-5 flex flex-col items-start gap-3">
+              <Link href={contactLinks.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm">
+                @sufiaw_chile <ArrowUpRight className="size-3.5" />
+              </Link>
+              <Link href={contactLinks.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm">
+                WhatsApp <ArrowUpRight className="size-3.5" />
+              </Link>
+              <Link href={contactLinks.mercadoLibre} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm">
+                Mercado Libre <ArrowUpRight className="size-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
         <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/60 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Sufiaw Store. Chile.</p>
-          <p>Catálogo en preparación · Pagos online próximamente</p>
+          <p>Ventas · Consultoría · Servicio · Impresión láser</p>
         </div>
       </div>
     </footer>

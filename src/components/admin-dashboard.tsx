@@ -153,12 +153,14 @@ function AdminSidebar({
 
 const emptyDraft = {
   name: "",
-  category: "Ropa",
+  category: "Computadores",
   price: "",
   stock: "0",
   status: "Borrador" as ProductStatus,
   description: "",
   image: "",
+  externalUrl: "",
+  specs: "",
   featured: true,
 };
 
@@ -217,6 +219,8 @@ export function AdminDashboard() {
       status: product.status,
       description: product.description,
       image: product.image,
+      externalUrl: product.externalUrl ?? "",
+      specs: product.specs?.join("\n") ?? "",
       featured: product.featured ?? false,
     });
     setDialogOpen(true);
@@ -254,9 +258,11 @@ export function AdminDashboard() {
       price: draft.price ? Number(draft.price) : null,
       stock: Number(draft.stock) || 0,
       status: draft.status,
-      image: draft.image || "/images/polera-oversize.png",
-      description: draft.description.trim() || "Nueva pieza de Sufiaw Store.",
+      image: draft.image || "/images/pc-gaming-reference.png",
+      description: draft.description.trim() || "Nuevo producto o servicio de Sufiaw Store.",
       featured: draft.featured,
+      externalUrl: draft.externalUrl.trim() || undefined,
+      specs: draft.specs.split("\n").map((item) => item.trim()).filter(Boolean),
     };
     setProducts(
       editingId
@@ -309,7 +315,12 @@ export function AdminDashboard() {
           <div className="flex items-center gap-3">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden"
+                  aria-label="Abrir menú de administración"
+                >
                   <Menu className="size-5" />
                 </Button>
               </SheetTrigger>
@@ -370,7 +381,7 @@ export function AdminDashboard() {
                     Hola, Sufiaw.
                   </h1>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Tu tienda está lista para recibir la colección real.
+                    Tu tienda está lista para cargar equipos, accesorios y servicios.
                   </p>
                 </div>
                 <Button onClick={openNewProduct}>
@@ -752,8 +763,8 @@ export function AdminDashboard() {
                   [
                     ExternalLink,
                     "Mercado Libre",
-                    "Vínculos directos por producto",
-                    "Próximamente",
+                    "Perfil y vínculos directos por producto",
+                    "Activo",
                   ],
                   [
                     Settings,
@@ -806,37 +817,38 @@ export function AdminDashboard() {
                   onChange={(event) =>
                     setDraft({ ...draft, name: event.target.value })
                   }
-                  placeholder="Ej. Polera Oversize Black"
+                  placeholder="Ej. PC Gaming Ryzen 5"
                 />
               </div>
               <div className="space-y-2">
-                <Label>Categoría</Label>
+                <Label htmlFor="category">Categoría</Label>
                 <Select
                   value={draft.category}
                   onValueChange={(value) =>
                     setDraft({ ...draft, category: value })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="category">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Ropa">Ropa</SelectItem>
+                    <SelectItem value="Computadores">Computadores</SelectItem>
                     <SelectItem value="Accesorios">Accesorios</SelectItem>
-                    <SelectItem value="Calzado">Calzado</SelectItem>
-                    <SelectItem value="Objetos">Objetos</SelectItem>
+                    <SelectItem value="Configuración">Configuración</SelectItem>
+                    <SelectItem value="Software">Software</SelectItem>
+                    <SelectItem value="Servicios">Servicios</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Estado</Label>
+                <Label htmlFor="status">Estado</Label>
                 <Select
                   value={draft.status}
                   onValueChange={(value) =>
                     setDraft({ ...draft, status: value as ProductStatus })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="status">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -881,6 +893,30 @@ export function AdminDashboard() {
                   }
                   placeholder="Describe material, calce y detalles…"
                   rows={4}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="specs">Especificaciones</Label>
+                <Textarea
+                  id="specs"
+                  value={draft.specs}
+                  onChange={(event) =>
+                    setDraft({ ...draft, specs: event.target.value })
+                  }
+                  placeholder={"Una especificación por línea\nEj. Intel Core i5\n16 GB RAM"}
+                  rows={4}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="externalUrl">Enlace de compra externo</Label>
+                <Input
+                  id="externalUrl"
+                  type="url"
+                  value={draft.externalUrl}
+                  onChange={(event) =>
+                    setDraft({ ...draft, externalUrl: event.target.value })
+                  }
+                  placeholder="https://www.mercadolibre.cl/…"
                 />
               </div>
               <div className="space-y-2 sm:col-span-2">
